@@ -3,12 +3,14 @@
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
+#include <QDebug>
 
 Board::Board(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Board)
 {
     ui->setupUi(this);
+    game = NULL;
 }
 
 Board::~Board()
@@ -16,25 +18,26 @@ Board::~Board()
     delete ui;
 }
 
-void Board::setGame(Game *game)
+void Board::setController(Controller *controller)
 {
-    this->game = game;
+    this->controller = controller;
+    game = controller->getGame();
+    setMouseTracking(true);
 }
 
 void Board::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
+    if (!game) {
+        return;
+    }
 
+    QPainter painter(this);
     // draw grids
     for (int i = 0; i < game->boardM() + 2; i++) {
         painter.drawLine(0, i * SPAN, (game->boardN() + 1) * SPAN, i * SPAN);
     }
     for (int i = 0; i < game->boardN() + 2; i++) {
         painter.drawLine(i * SPAN, 0, i * SPAN, (game->boardM() + 1) * SPAN);
-    }
-
-    if (game->player() == game->UNINITIAL) {
-        return;
     }
 
     // draw chess
@@ -64,15 +67,24 @@ void Board::paintEvent(QPaintEvent *)
     painter.setPen(QPen(Qt::red));
     painter.setBrush(QBrush());
     painter.drawRect(p.x * SPAN + (SPAN - RADIUS), p.y * SPAN + (SPAN - RADIUS), RADIUS * 2, RADIUS * 2);
+
+    if (!controller->enabled()) {
+        return;
+    }
+
+    // draw current position
+    painter.setPen(QPen(Qt::blue));
+    painter.setBrush(QBrush());
+    painter.drawEllipse(QPoint((currentPos.x + 1) * SPAN, (currentPos.y + 1) * SPAN), RADIUS, RADIUS);
 }
 
 void Board::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!enabled) {
+    if (!controller->enabled()) {
         return;
     }
 
-    Point p = chessPos(event);
+    updateCurrentPos(event->x(), event->y());
 }
 
 void Board::mousePressEvent(QMouseEvent *event)
@@ -85,9 +97,9 @@ void Board::mouseReleaseEvent(QMouseEvent *event)
 
 }
 
-Point Board::chessPos(QMouseEvent *event) const
+void Board::updateCurrentPos(int x, int y)
 {
-    int x = event->x();
-    int y = event->y();
-
+    currentPos.x = x / SPAN - 1;
+    currentPos.y = y / SPAN - 1;
+    update();
 }

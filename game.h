@@ -7,7 +7,6 @@ class Game
 {
 public:
     // game states
-    const static int UNINITIAL = 0;
     const static int BLACK_PLAYER = 1;
     const static int WHITE_PLAYER = 2;
     const static int GAME_OVER = 3;
@@ -26,7 +25,7 @@ public:
     // update
     void updateNotPos();
 
-    //
+    // tell whether it is a legal move
     bool isLegalMove(const Point& pos);
 
     // getters
@@ -37,12 +36,16 @@ public:
     int chess(int x, int y) const;
     Point lastPos() const;
     Point notPos() const;
+    const int* top() const;
+    const int* board() const;
+    int firstPlayer() const;
 
 private:
     // states
     int _boardM;
     int _boardN;
     int _player; // current status
+    int _firstPlayer;
     int* _tops;
     int** _board;
     Point _lastPos;

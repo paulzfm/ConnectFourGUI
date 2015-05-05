@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <QPaintEvent>
-#include "game.h"
+#include "controller.h"
 
 namespace Ui {
 class Board;
@@ -17,7 +17,7 @@ class Board : public QWidget
 public:
     explicit Board(QWidget *parent = 0);
     ~Board();
-    void setGame(Game *game);
+    void setController(Controller *controller);
 
     const static int SPAN = 30;
     const static int RADIUS = 12;
@@ -29,9 +29,10 @@ public:
 private:
     Ui::Board *ui;
     Game *game;
-    bool enabled;
+    Controller *controller;
+    Point currentPos;
 
-    Point chessPos(QMouseEvent* event) const;
+    void updateCurrentPos(int x, int y);
 };
 
 #endif // BOARD_H

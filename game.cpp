@@ -3,11 +3,12 @@
 #include <vector>
 #include <stdlib.h>
 
-void Game::init(const int M, const int N, int firstPlayer)
+Game::Game(const int M, const int N, int firstPlayer)
 {
     _boardM = M;
     _boardN = N;
     _player = firstPlayer;
+    _firstPlayer = firstPlayer;
 
     _tops = new int[N];
     for (int i = 0; i < N; i++) {
@@ -103,4 +104,49 @@ Point Game::lastPos() const
 Point Game::notPos() const
 {
     return _notPos;
+}
+
+const int* Game::top() const
+{
+    int* tmp = new int[_boardN];
+    for (int i = 0; i < _boardN; i++) {
+        if (i == _notPos.y && _tops[i] - 1 == _notPos.x) {
+            tmp[i] = 0;
+        } else {
+            tmp[i] = _tops[i];
+        }
+    }
+
+    return tmp;
+}
+
+const int* Game::board() const
+{
+    int* tmp = new int[_boardM * _boardN];
+    if (_player == BLACK_PLAYER) {
+        for (int i = 0; i < _boardM; i++) {
+            for (int j = 0; j < _boardN; j++) {
+                tmp[i * _boardM + j] = _board[i][j];
+            }
+        }
+    } else { // _player == WHITE_PLAYER
+        for (int i = 0; i < _boardM; i++) {
+            for (int j = 0; j < _boardN; j++) {
+                if (_board[i][j] == 0) {
+                    tmp[i * _boardM + j] = 0;
+                } else if (_board[i][j] == 1) {
+                    tmp[i * _boardM + j] = 2;
+                } else { // _board[i][j] == 2
+                    tmp[i * _boardM + j] = 1;
+                }
+            }
+        }
+    }
+
+    return tmp;
+}
+
+int Game::firstPlayer() const
+{
+    return _firstPlayer;
 }
