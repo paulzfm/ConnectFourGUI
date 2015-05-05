@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <QPaintEvent>
+#include <QVector>
 #include "controller.h"
 
 namespace Ui {
@@ -23,15 +24,16 @@ public:
     const static int RADIUS = 12;
     void paintEvent(QPaintEvent*);
     void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void enable();
 
 private:
     Ui::Board *ui;
     Game *game;
     Controller *controller;
     Point currentPos;
-
+    bool enabled;
+    QVector<Point> available;
     void updateCurrentPos(int x, int y);
 };
 

@@ -17,13 +17,10 @@ public:
     void makeDecision();
 
     Game* getGame();
-    bool enabled();
 
     const static int HUMAN = 1;
     const static int COMPUTER = 2;
-signals:
 
-public slots:
     void applyMove(const Point& pos);
 
 private:
@@ -32,7 +29,6 @@ private:
     Strategy *strategyBlack;
     Strategy *strategyWhite;
     Game *game;
-    bool _enabled;
 };
 
 #endif // CONTROLLER_H

@@ -18,6 +18,19 @@ Board::~Board()
     delete ui;
 }
 
+void Board::enable()
+{
+    enabled = true;
+    available.clear();
+    const int* top = game->top();
+    for (int i = 0; i < game->boardN(); i++) {
+        if (top[i] != 0) {
+            available.push_back(Point(top[i] - 1, i));
+        }
+    }
+    delete top;
+}
+
 void Board::setController(Controller *controller)
 {
     this->controller = controller;
@@ -68,7 +81,7 @@ void Board::paintEvent(QPaintEvent *)
     painter.setBrush(QBrush());
     painter.drawRect(p.x * SPAN + (SPAN - RADIUS), p.y * SPAN + (SPAN - RADIUS), RADIUS * 2, RADIUS * 2);
 
-    if (!controller->enabled()) {
+    if (!enabled) {
         return;
     }
 
@@ -80,21 +93,26 @@ void Board::paintEvent(QPaintEvent *)
 
 void Board::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!controller->enabled()) {
+    if (!enabled) {
         return;
     }
 
     updateCurrentPos(event->x(), event->y());
 }
 
-void Board::mousePressEvent(QMouseEvent *event)
-{
-
-}
-
 void Board::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (!enabled) {
+        return;
+    }
 
+    updateCurrentPos(event->x(), event->y());
+
+    if (available.indexOf(currentPos) != -1) {
+        controller->applyMove(currentPos);
+        enabled = false;
+        update();
+    }
 }
 
 void Board::updateCurrentPos(int x, int y)

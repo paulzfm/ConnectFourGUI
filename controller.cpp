@@ -2,7 +2,6 @@
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
-    _enabled = false;
 }
 
 void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
@@ -49,7 +48,7 @@ void Controller::makeDecision()
         delete[] board;
         applyMove(pos);
     } else { // HUMAN
-        _enabled = true;
+        //board->enable();
         // wait for callback: applyMove
     }
 }
@@ -76,9 +75,4 @@ void Controller::applyMove(const Point &pos)
 Game* Controller::getGame()
 {
     return game;
-}
-
-bool Controller::enabled()
-{
-    return _enabled;
 }
