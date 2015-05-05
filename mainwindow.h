@@ -21,11 +21,8 @@ public:
 
 private slots:
     void on_actionDefaultSetting_triggered();
-
     void on_actionRandomSetting_triggered();
-
     void on_actionSpecifiedSetting_triggered();
-
     void on_actionReplay_triggered();
 
 private:

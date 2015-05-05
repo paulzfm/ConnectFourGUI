@@ -13,16 +13,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     board = new Board(this);
-        QGridLayout *layout = new QGridLayout(ui->centralWidget);
-        layout->setMargin(0);
-        layout->addWidget(board);
+    QGridLayout *layout = new QGridLayout(ui->centralWidget);
+    layout->setMargin(0);
+    layout->addWidget(board);
     controller = new Controller(this);
 
     // status bar
-    status = new QLabel("Please load a sample.");
+    status = new QLabel("Please start a new game.");
     status->setMinimumSize(status->sizeHint());
     status->setAlignment(Qt::AlignHCenter);
     ui->statusBar->addWidget(status);
+    controller->setStatus(status);
 
     // disable actions
     ui->actionReplay->setEnabled(false);
@@ -37,6 +38,7 @@ void MainWindow::on_actionDefaultSetting_triggered()
 {
     controller->loadSettings(8, 8, Controller::HUMAN, Controller::HUMAN, "", "",
                              Game::BLACK_PLAYER, board);
+    ui->actionReplay->setEnabled(true);
 }
 
 void MainWindow::on_actionRandomSetting_triggered()
@@ -47,6 +49,7 @@ void MainWindow::on_actionRandomSetting_triggered()
         dlg->getParams(params);
         loadParams(params);
     }
+    ui->actionReplay->setEnabled(true);
 }
 
 void MainWindow::on_actionSpecifiedSetting_triggered()
@@ -57,15 +60,11 @@ void MainWindow::on_actionSpecifiedSetting_triggered()
         dlg->getParams(params);
         loadParams(params);
     }
+    ui->actionReplay->setEnabled(true);
 }
 
 void MainWindow::loadParams(Params& param)
 {
-    std::cout << "params" << std::endl;
-    std::cout << "first: " << param.firstPlayer << std::endl
-              << "black: " << param.blackStrategy << std::endl
-              << "white: " << param.whiteStrategy << std::endl;
-
     if (param.isRandom) {
         param.boardM = 7 + rand() % 6;
         param.boardN = 7 + rand() % 6;

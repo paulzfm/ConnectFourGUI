@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <QLabel>
 #include <string>
 
 #include "strategy.h"
@@ -16,6 +17,7 @@ public:
     void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
                       std::string dylibBlack, std::string dylibWhite, int firstPlayer,
                       Board* board);
+    void setStatus(QLabel *status);
     void restartGame();
 
     void makeDecision();
@@ -37,6 +39,7 @@ private:
     Strategy *strategyWhite;
     Board *board;
     Game *game;
+    QLabel *status;
 };
 
 #endif // CONTROLLER_H
