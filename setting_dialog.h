@@ -15,8 +15,8 @@ struct Params
     bool isRandom;
     int blackPlayer;
     int whitePlayer;
-    const char* blackStrategy;
-    const char* whiteStrategy;
+    std::string blackStrategy;
+    std::string whiteStrategy;
 };
 
 class SettingDialog : public QDialog
@@ -24,10 +24,10 @@ class SettingDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SettingDialog(QWidget *parent = 0);
+    explicit SettingDialog(QWidget *parent = 0, bool random = false);
     ~SettingDialog();
 
-    Params param();
+    void getParams(Params& params);
     void accept();
 
 private slots:
@@ -41,6 +41,16 @@ private slots:
     void on_whiteIsComputer_clicked();
 
     void on_blackStrategy_released();
+
+    void on_whiteStrategy_released();
+
+    void on_blackFirst_clicked();
+
+    void on_whiteFirst_clicked();
+
+    void on_boardSizeM_valueChanged(int arg1);
+
+    void on_boardSizeN_valueChanged(int arg1);
 
 private:
     Ui::SettingDialog *ui;

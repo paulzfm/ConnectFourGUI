@@ -1,13 +1,15 @@
 #include "strategy.h"
 #include <stdio.h>
 #include <dlfcn.h>
+#include <iostream>
 
-Strategy::Strategy(const char* dylib)
+Strategy::Strategy(std::string dylib)
 {
-    void* hDylib = dlopen(dylib, RTLD_LOCAL | RTLD_NOW);
+    void* hDylib = dlopen(dylib.c_str(), RTLD_LOCAL | RTLD_NOW);
 
     if (!hDylib) {
-        fprintf(stderr, "***Error: cannot find library \"%s\".\n", dylib);
+        std::cout << "not such lib!" << std::endl;
+        fprintf(stderr, "***Error: cannot find library \"%s\".\n", dylib.c_str());
     }
 
     // obtain function pointers
@@ -15,8 +17,8 @@ Strategy::Strategy(const char* dylib)
     clearPoint = (CLEARPOINT)dlsym(hDylib, "clearPoint");
 
     if (getPoint == NULL || clearPoint == NULL) {
+        std::cout << "not such func!" << std::endl;
         fprintf(stderr, "***Error: cannot load function.\n");
-//        return -1;
     }
 }
 

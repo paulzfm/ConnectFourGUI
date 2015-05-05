@@ -8,7 +8,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
 }
 
 void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                              const char *dylibBlack, const char *dylibWhite, int firstPlayer,
+                              std::string dylibBlack, std::string dylibWhite, int firstPlayer,
                               Board* board)
 {
     this->roleBlack = roleBlack;
@@ -25,6 +25,8 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
     connect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
 
     // start first round
+    std::cout << "game start..." << std::endl;
+
     makeDecision();
 }
 
@@ -39,6 +41,8 @@ void Controller::restartGame()
 void Controller::makeDecision()
 {
     int player = game->player();
+    std::cout << "current: " << player << std::endl;
+
     if (player == Game::BLACK_PLAYER && roleBlack == COMPUTER) {
         const int* top = game->top();
         const int* board = game->board();

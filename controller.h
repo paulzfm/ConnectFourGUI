@@ -2,6 +2,8 @@
 #define CONTROLLER_H
 
 #include <QObject>
+#include <string>
+
 #include "strategy.h"
 #include "game.h"
 #include "board.h"
@@ -12,7 +14,7 @@ class Controller : public QObject
 public:
     explicit Controller(QObject *parent = 0);
     void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                      const char* dylibBlack, const char* dylibWhite, int firstPlayer,
+                      std::string dylibBlack, std::string dylibWhite, int firstPlayer,
                       Board* board);
     void restartGame();
 

@@ -5,6 +5,7 @@
 #include <QLabel>
 #include "board.h"
 #include "controller.h"
+#include "setting_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +33,8 @@ private:
     Controller *controller;
     Board *board;
     QLabel *status;
+
+    void loadParams(Params& param);
 };
 
 #endif // MAINWINDOW_H
