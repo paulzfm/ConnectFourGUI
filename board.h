@@ -5,7 +5,8 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QVector>
-#include "controller.h"
+#include <QRect>
+#include "game.h"
 
 namespace Ui {
 class Board;
@@ -18,23 +19,36 @@ class Board : public QWidget
 public:
     explicit Board(QWidget *parent = 0);
     ~Board();
-    void setController(Controller *controller);
+//    void setController(Controller *controller);
 
-    const static int SPAN = 30;
-    const static int RADIUS = 12;
+    const static int SPAN = 40;
+    const static int RADIUS = 15;
     void paintEvent(QPaintEvent*);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+
+    // associate with a specified game
+    void setGame(Game* game);
+
     void enable();
+
+
+
+signals:
+    void moveMade(const Point& pos);
 
 private:
     Ui::Board *ui;
     Game *game;
-    Controller *controller;
+//    Controller *
     Point currentPos;
     bool enabled;
     QVector<Point> available;
     void updateCurrentPos(int x, int y);
+
+    // transformer
+    Point toBoardPos(const Point& pos);
+    QRect toChessRect(const Point& pos);
 };
 
 #endif // BOARD_H

@@ -23,12 +23,14 @@ Game::Game(const int M, const int N, int firstPlayer)
         }
     }
 
+    _lastPos = Point(-2, -2);
+
     updateNotPos();
 }
 
 int Game::applyMove(const Point& pos)
 {
-    if (!isLegalMove(pos)) {
+    if (isLegalMove(pos)) {
         return ILLEGAL_MOVE;
     }
 

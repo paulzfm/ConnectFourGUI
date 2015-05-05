@@ -4,6 +4,8 @@
 #include <QGridLayout>
 #include <QDebug>
 
+#include "setting_dialog.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -15,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QGridLayout *layout = new QGridLayout(ui->centralWidget);
         layout->setMargin(0);
         layout->addWidget(board);
-    controller = new Controller;
+    controller = new Controller(this);
 
     // status bar
     status = new QLabel("Please load a sample.");
@@ -31,19 +33,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_actionCurrent_Setting_triggered()
+void MainWindow::on_actionDefaultSetting_triggered()
+{
+    controller->loadSettings(6, 7, Controller::HUMAN, Controller::HUMAN, NULL, NULL,
+                             Game::BLACK_PLAYER, board);
+}
+
+void MainWindow::on_actionRandomSetting_triggered()
+{
+
+}
+
+void MainWindow::on_actionSpecifiedSetting_triggered()
+{
+    SettingDialog *dlg = new SettingDialog(this);
+    dlg->show();
+}
+
+void MainWindow::on_actionReplay_triggered()
 {
     controller->restartGame();
-}
-
-void MainWindow::on_actionNew_Setting_triggered()
-{
-
-}
-
-void MainWindow::on_actionDefault_Setting_triggered()
-{
-    controller->loadSettings(6, 7, Controller::HUMAN, Controller::HUMAN, NULL, NULL, Game::BLACK_PLAYER);
-    board->setController(controller);
-    board->update();
 }

@@ -4,6 +4,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QDebug>
+#include <iostream>
 
 Board::Board(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +19,12 @@ Board::~Board()
     delete ui;
 }
 
+void Board::setGame(Game* game)
+{
+    this->game = game;
+    this->setMouseTracking(true);
+}
+
 void Board::enable()
 {
     enabled = true;
@@ -29,13 +36,6 @@ void Board::enable()
         }
     }
     delete top;
-}
-
-void Board::setController(Controller *controller)
-{
-    this->controller = controller;
-    game = controller->getGame();
-    setMouseTracking(true);
 }
 
 void Board::paintEvent(QPaintEvent *)
@@ -58,37 +58,42 @@ void Board::paintEvent(QPaintEvent *)
         for (int j = 0; j < game->boardN(); j++) {
             if (game->chess(i, j) == Game::BLACK_PLAYER) {
                 painter.setBrush(QBrush(Qt::black));
-                painter.setPen(QPen(Qt::black));
-                painter.drawEllipse(QPoint((i + 1) * SPAN, (j + 1) * SPAN), RADIUS, RADIUS);
+                painter.setPen(QPen());
+                painter.drawEllipse(toChessRect(Point(i, j)));
             } else if (game->chess(i, j) == Game::WHITE_PLAYER) {
                 painter.setBrush(QBrush(Qt::white));
-                painter.setPen(QPen(Qt::white));
-                painter.drawEllipse(QPoint((i + 1) * SPAN, (j + 1) * SPAN), RADIUS, RADIUS);
+                painter.setPen(QPen());
+                painter.drawEllipse(toChessRect(Point(i, j)));
             }
         }
     }
 
     // draw not pos
     if (game->player() != Game::GAME_OVER) {
-        Point p = game->notPos();
+        painter.setPen(QPen());
         painter.setBrush(QBrush(Qt::red));
-        painter.drawEllipse(QPoint((p.x + 1) * SPAN, (p.y + 1) * SPAN), RADIUS, RADIUS);
+        painter.drawEllipse(toChessRect(game->notPos()));
     }
 
     // draw last position
-    Point p = game->lastPos();
     painter.setPen(QPen(Qt::red));
     painter.setBrush(QBrush());
-    painter.drawRect(p.x * SPAN + (SPAN - RADIUS), p.y * SPAN + (SPAN - RADIUS), RADIUS * 2, RADIUS * 2);
+    painter.drawRect(toChessRect(game->lastPos()));
 
-    if (!enabled) {
+    // draw current position
+    if (!enabled || currentPos.isEmpty()) {
         return;
     }
 
-    // draw current position
-    painter.setPen(QPen(Qt::blue));
-    painter.setBrush(QBrush());
-    painter.drawEllipse(QPoint((currentPos.x + 1) * SPAN, (currentPos.y + 1) * SPAN), RADIUS, RADIUS);
+//    std::cout << game->player() << std::endl;
+//    int color = game->player() == Game::BLACK_PLAYER ? Qt::black : Qt::white;
+    painter.setPen(QPen());
+    if (game->player() == Game::BLACK_PLAYER) {
+        painter.setBrush(QBrush(Qt::black));
+    } else {
+        painter.setBrush(QBrush(Qt::white));
+    }
+    painter.drawEllipse(toChessRect(currentPos));
 }
 
 void Board::mouseMoveEvent(QMouseEvent *event)
@@ -108,16 +113,32 @@ void Board::mouseReleaseEvent(QMouseEvent *event)
 
     updateCurrentPos(event->x(), event->y());
 
-    if (available.indexOf(currentPos) != -1) {
-        controller->applyMove(currentPos);
+    if (!currentPos.isEmpty()) {
         enabled = false;
-        update();
+        emit moveMade(currentPos);
+        currentPos = Point::empty();
     }
 }
 
 void Board::updateCurrentPos(int x, int y)
 {
-    currentPos.x = x / SPAN - 1;
-    currentPos.y = y / SPAN - 1;
+    currentPos = toBoardPos(Point(x, y));
     update();
+}
+
+Point Board::toBoardPos(const Point &pos)
+{
+    for (int i = 0; i < available.size(); i++) {
+        if (pos.inRect(toChessRect(available[i]))) {
+            return available[i];
+        }
+    }
+
+    return Point::empty();
+}
+
+QRect Board::toChessRect(const Point &pos)
+{
+    return QRect(pos.y * SPAN + (SPAN - RADIUS), pos.x * SPAN + (SPAN - RADIUS),
+                 RADIUS * 2, RADIUS * 2);
 }

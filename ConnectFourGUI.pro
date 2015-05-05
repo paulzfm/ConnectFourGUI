@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     judge.cpp \
     game.cpp \
     board.cpp \
-    controller.cpp
+    controller.cpp \
+    point.cpp \
+    setting_dialog.cpp
 
 HEADERS  += mainwindow.h \
     strategy.h \
@@ -26,7 +28,9 @@ HEADERS  += mainwindow.h \
     judge.h \
     game.h \
     board.h \
-    controller.h
+    controller.h \
+    setting_dialog.h
 
 FORMS    += mainwindow.ui \
-    board.ui
+    board.ui \
+    setting_dialog.ui

@@ -4,6 +4,7 @@
 #include <QObject>
 #include "strategy.h"
 #include "game.h"
+#include "board.h"
 
 class Controller : public QObject
 {
@@ -11,16 +12,20 @@ class Controller : public QObject
 public:
     explicit Controller(QObject *parent = 0);
     void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                      const char* dylibBlack, const char* dylibWhite, int firstPlayer);
+                      const char* dylibBlack, const char* dylibWhite, int firstPlayer,
+                      Board* board);
     void restartGame();
 
     void makeDecision();
+
+    void gameOver();
 
     Game* getGame();
 
     const static int HUMAN = 1;
     const static int COMPUTER = 2;
 
+public slots:
     void applyMove(const Point& pos);
 
 private:
@@ -28,6 +33,7 @@ private:
     int roleWhite;
     Strategy *strategyBlack;
     Strategy *strategyWhite;
+    Board *board;
     Game *game;
 };
 

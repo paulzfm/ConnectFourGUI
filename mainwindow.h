@@ -19,11 +19,13 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionCurrent_Setting_triggered();
+    void on_actionDefaultSetting_triggered();
 
-    void on_actionNew_Setting_triggered();
+    void on_actionRandomSetting_triggered();
 
-    void on_actionDefault_Setting_triggered();
+    void on_actionSpecifiedSetting_triggered();
+
+    void on_actionReplay_triggered();
 
 private:
     Ui::MainWindow *ui;
