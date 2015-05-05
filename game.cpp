@@ -3,13 +3,6 @@
 #include <vector>
 #include <stdlib.h>
 
-Game::Game()
-{
-    _boardM = 6;
-    _boardN = 7;
-    _player = UNINITIAL;
-}
-
 void Game::init(const int M, const int N, int firstPlayer)
 {
     _boardM = M;

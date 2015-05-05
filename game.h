@@ -12,10 +12,7 @@ public:
     const static int WHITE_PLAYER = 2;
     const static int GAME_OVER = 3;
 
-    Game();
-
-    // must call this before game really starts
-    void init(const int M, const int N, int firstPlayer);
+    Game(const int M, const int N, int firstPlayer);
 
     // apply a move for current player
     int applyMove(const Point& pos);
