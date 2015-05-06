@@ -5,7 +5,6 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
-#include <QDebug>
 
 SettingDialog::SettingDialog(QWidget *parent, bool random) :
     QDialog(parent),

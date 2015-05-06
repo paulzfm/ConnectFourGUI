@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include <iostream>
+
 #include <QRect>
 
 class Point
@@ -10,13 +11,13 @@ public:
     int x;
     int y;
 
-    Point()
+    Point() // empty point
     {
         this->x = -1;
         this->y = -1;
     }
 
-    static Point empty()
+    static Point empty() // empty point
     {
         return Point(-1, -1);
     }

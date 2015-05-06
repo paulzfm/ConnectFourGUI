@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include <time.h>
 #include <stdlib.h>
+
 #include <QGridLayout>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     controller = new Controller(this);
 
     // status bar
-    status = new QLabel("Please start a new game.");
+    status = new QLabel("Please launch a new game.");
     status->setMinimumSize(status->sizeHint());
     status->setAlignment(Qt::AlignHCenter);
     ui->statusBar->addWidget(status);
@@ -47,7 +48,10 @@ void MainWindow::on_actionRandomSetting_triggered()
     if (dlg->exec() == QDialog::Accepted) {
         Params params;
         dlg->getParams(params);
-        loadParams(params);
+        controller->loadSettings(params.boardM, params.boardN,
+                                 params.blackPlayer, params.whitePlayer,
+                                 params.blackStrategy, params.whiteStrategy,
+                                 params.firstPlayer, board, params.isRandom);
     }
     ui->actionReplay->setEnabled(true);
 }
@@ -58,25 +62,35 @@ void MainWindow::on_actionSpecifiedSetting_triggered()
     if (dlg->exec() == QDialog::Accepted) {
         Params params;
         dlg->getParams(params);
-        loadParams(params);
+        controller->loadSettings(params.boardM, params.boardN,
+                                 params.blackPlayer, params.whitePlayer,
+                                 params.blackStrategy, params.whiteStrategy,
+                                 params.firstPlayer, board, params.isRandom);
     }
     ui->actionReplay->setEnabled(true);
-}
-
-void MainWindow::loadParams(Params& param)
-{
-    if (param.isRandom) {
-        param.boardM = 7 + rand() % 6;
-        param.boardN = 7 + rand() % 6;
-        param.firstPlayer = rand() % 2 == 0 ?
-                    Game::BLACK_PLAYER : Game::WHITE_PLAYER;
-    }
-
-    controller->loadSettings(param.boardM, param.boardN, param.blackPlayer, param.whitePlayer,
-                             param.blackStrategy, param.whiteStrategy, param.firstPlayer, board);
 }
 
 void MainWindow::on_actionReplay_triggered()
 {
     controller->restartGame();
+}
+
+void MainWindow::on_actionIntervalReset_triggered()
+{
+    controller->setSpeed(1);
+}
+
+void MainWindow::on_actionIntervalPlus_triggered()
+{
+    controller->setSpeed(controller->getSpeed() + 1);
+}
+
+void MainWindow::on_actionIntervalMinus_triggered()
+{
+    controller->setSpeed(controller->getSpeed() - 1);
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    qApp->quit();
 }

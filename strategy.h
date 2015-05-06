@@ -2,6 +2,7 @@
 #define STRATEGY_H
 
 #include <string>
+
 #include "point.h"
 
 // Function pointers

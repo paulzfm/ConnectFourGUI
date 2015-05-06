@@ -1,14 +1,12 @@
 #include "strategy.h"
 #include <stdio.h>
 #include <dlfcn.h>
-#include <iostream>
 
 Strategy::Strategy(std::string dylib)
 {
     void* hDylib = dlopen(dylib.c_str(), RTLD_LOCAL | RTLD_NOW);
 
     if (!hDylib) {
-        std::cout << "not such lib!" << std::endl;
         fprintf(stderr, "***Error: cannot find library \"%s\".\n", dylib.c_str());
     }
 
@@ -17,7 +15,6 @@ Strategy::Strategy(std::string dylib)
     clearPoint = (CLEARPOINT)dlsym(hDylib, "clearPoint");
 
     if (getPoint == NULL || clearPoint == NULL) {
-        std::cout << "not such func!" << std::endl;
         fprintf(stderr, "***Error: cannot load function.\n");
     }
 }

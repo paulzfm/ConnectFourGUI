@@ -1,10 +1,9 @@
 #include "board.h"
 #include "ui_board.h"
+
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
-#include <QDebug>
-#include <iostream>
 
 Board::Board(QWidget *parent) :
     QWidget(parent),

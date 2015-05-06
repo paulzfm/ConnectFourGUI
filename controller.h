@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QLabel>
+#include <QTimer>
+
 #include <string>
 
 #include "strategy.h"
@@ -14,34 +16,60 @@ class Controller : public QObject
     Q_OBJECT
 public:
     explicit Controller(QObject *parent = 0);
-    void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                      std::string dylibBlack, std::string dylibWhite, int firstPlayer,
-                      Board* board, int speed = 0);
-    void setStatus(QLabel *status);
-    void setSpeed(int speed);
-    void restartGame();
+    ~Controller();
 
-    void makeDecision();
-
-    void gameOver();
-
-    Game* getGame();
-
+    // player roles
     const static int HUMAN = 1;
     const static int COMPUTER = 2;
 
+    // must first call this when create a new game
+    void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
+                      std::string dylibBlack, std::string dylibWhite,
+                      int firstPlayer, Board* board, bool random = false);
+
+    // restart a new game with current setting
+    void restartGame();
+
+    // set status bar
+    void setStatus(QLabel *status);
+
+    // game speed: only available in compete mode (two computer players)
+    int getSpeed();
+    void setSpeed(int speed);
+
+    // access game object
+    Game* getGame();
+
 public slots:
+    // either call manually for callback with signal emiting
     void applyMove(const Point& pos);
 
 private:
     int roleBlack;
     int roleWhite;
+    std::string dylibBlack;
+    std::string dylibWhite;
+    bool isRandom;
     Strategy *strategyBlack;
     Strategy *strategyWhite;
     Board *board;
     Game *game;
-    QLabel *status;
+
+    bool isCompete;
     int speed;
+    QTimer *timer;
+
+    QLabel *status;
+
+    // first call this then applyMove
+    void makeDecision();
+
+    // after game is over
+    void gameOver();
+
+private slots:
+    // call this when timer is timed out
+    void callStrategy();
 };
 
 #endif // CONTROLLER_H

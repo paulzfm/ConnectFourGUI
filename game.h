@@ -12,6 +12,7 @@ public:
     const static int GAME_OVER = 3;
 
     Game(const int M, const int N, int firstPlayer);
+    ~Game();
 
     // apply a move for current player
     int applyMove(const Point& pos);
@@ -22,7 +23,7 @@ public:
     const static int WHITE_WIN = 3;
     const static int IS_TIE = 4;
 
-    // update
+    // update "not" position
     void updateNotPos();
 
     // tell whether it is a legal move
@@ -41,7 +42,6 @@ public:
     int firstPlayer() const;
 
 private:
-    // states
     int _boardM;
     int _boardN;
     int _player; // current status

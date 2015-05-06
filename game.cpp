@@ -1,5 +1,6 @@
 #include "game.h"
 #include "judge.h"
+
 #include <vector>
 #include <stdlib.h>
 
@@ -26,6 +27,15 @@ Game::Game(const int M, const int N, int firstPlayer)
     _lastPos = Point(-2, -2);
 
     updateNotPos();
+}
+
+Game::~Game()
+{
+    delete[] _tops;
+    for (int i = 0; i < _boardM; i++) {
+        delete[] _board[i];
+    }
+    delete[] _board;
 }
 
 int Game::applyMove(const Point& pos)

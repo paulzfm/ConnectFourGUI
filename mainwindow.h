@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLabel>
+
 #include "board.h"
 #include "controller.h"
 #include "setting_dialog.h"
@@ -24,14 +25,16 @@ private slots:
     void on_actionRandomSetting_triggered();
     void on_actionSpecifiedSetting_triggered();
     void on_actionReplay_triggered();
+    void on_actionIntervalReset_triggered();
+    void on_actionIntervalPlus_triggered();
+    void on_actionIntervalMinus_triggered();
+    void on_actionQuit_triggered();
 
 private:
     Ui::MainWindow *ui;
     Controller *controller;
     Board *board;
     QLabel *status;
-
-    void loadParams(Params& param);
 };
 
 #endif // MAINWINDOW_H
