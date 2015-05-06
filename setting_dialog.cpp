@@ -13,24 +13,21 @@ SettingDialog::SettingDialog(QWidget *parent, bool random) :
 {
     ui->setupUi(this);
 
-    _params.boardM = 8;
-    _params.boardN = 8;
-    _params.firstPlayer = Game::BLACK_PLAYER;
-    _params.isRandom = false;
-    _params.blackPlayer = Controller::HUMAN;
-    _params.whitePlayer = Controller::HUMAN;
-
-    ui->blackFirst->setChecked(true);
-    ui->boardSizeM->setValue(_params.boardM);
-    ui->boardSizeN->setValue(_params.boardN);
+    this->on_blackIsHuman_clicked();
+    this->on_whiteIsHuman_clicked();
     ui->blackIsHuman->setChecked(true);
-    ui->blackStrategy->setEnabled(false);
     ui->whiteIsHuman->setChecked(true);
-    ui->whiteStrategy->setEnabled(false);
+    ui->boardSizeM->setValue(8);
+    ui->boardSizeN->setValue(8);
+    ui->blackFirst->setChecked(true);
 
     if (random) {
-        _params.isRandom = true;
         ui->isRandom->setChecked(true);
+        this->on_isRandom_clicked(true);
+    } else {
+        this->on_boardSizeM_valueChanged(8);
+        this->on_boardSizeN_valueChanged(8);
+        this->on_blackFirst_clicked();
     }
 }
 
@@ -119,9 +116,6 @@ void SettingDialog::on_blackStrategy_released()
     } else {
         ui->blackStrategy->setText("Strategy File");
     }
-
-    qDebug() << file;
-    std::cout << _params.blackStrategy << std::endl;
 }
 
 void SettingDialog::on_whiteStrategy_released()

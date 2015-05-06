@@ -9,9 +9,10 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
                               std::string dylibBlack, std::string dylibWhite, int firstPlayer,
-                              Board* board)
+                              Board* board, int speed)
 {
     status->setText("Loading...");
+    this->speed = speed;
     this->roleBlack = roleBlack;
     this->roleWhite = roleWhite;
     this->board = board;
@@ -115,4 +116,9 @@ void Controller::gameOver()
 Game* Controller::getGame()
 {
     return game;
+}
+
+void Controller::setSpeed(int speed)
+{
+    this->speed = speed;
 }

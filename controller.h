@@ -16,8 +16,9 @@ public:
     explicit Controller(QObject *parent = 0);
     void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
                       std::string dylibBlack, std::string dylibWhite, int firstPlayer,
-                      Board* board);
+                      Board* board, int speed = 0);
     void setStatus(QLabel *status);
+    void setSpeed(int speed);
     void restartGame();
 
     void makeDecision();
@@ -40,6 +41,7 @@ private:
     Board *board;
     Game *game;
     QLabel *status;
+    int speed;
 };
 
 #endif // CONTROLLER_H
