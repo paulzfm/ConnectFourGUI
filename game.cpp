@@ -59,7 +59,7 @@ int Game::applyMove(const Point& pos)
         return IS_TIE;
     }
 
-    updateNotPos();
+//    updateNotPos();
     _player = _player == BLACK_PLAYER ? WHITE_PLAYER : BLACK_PLAYER;
     return GAME_CONTINUE;
 }
@@ -67,20 +67,6 @@ int Game::applyMove(const Point& pos)
 bool Game::isLegalMove(const Point& pos)
 {
     return pos.inRect(_boardM, _boardN) && (_tops[pos.y] == pos.x - 1) && !(_notPos == pos);
-}
-
-void Game::updateNotPos()
-{
-    std::vector<Point> empty;
-    for (int i = 0; i < _boardM; i++) {
-        for (int j = 0; j < _boardN; j++) {
-            if (_board[i][j] == 0) {
-                empty.push_back(Point(i, j));
-            }
-        }
-    }
-
-    _notPos = empty[rand() % empty.size()];
 }
 
 int Game::player() const

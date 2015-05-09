@@ -27,4 +27,3 @@ Point Strategy::getDecision(const int M, const int N, const int *_top, const int
     clearPoint(p);
     return decision;
 }
-

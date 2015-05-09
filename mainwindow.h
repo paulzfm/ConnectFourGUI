@@ -6,7 +6,6 @@
 
 #include "board.h"
 #include "controller.h"
-#include "setting_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,10 +24,11 @@ private slots:
     void on_actionRandomSetting_triggered();
     void on_actionSpecifiedSetting_triggered();
     void on_actionReplay_triggered();
-    void on_actionIntervalReset_triggered();
-    void on_actionIntervalPlus_triggered();
-    void on_actionIntervalMinus_triggered();
     void on_actionQuit_triggered();
+
+    void on_actionCompete_Setting_triggered();
+
+    void on_actionStrategyFile_triggered();
 
 private:
     Ui::MainWindow *ui;

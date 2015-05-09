@@ -5,8 +5,11 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
 
-SettingDialog::SettingDialog(QWidget *parent, bool random) :
+SettingDialog::SettingDialog(QWidget *parent, bool random, bool compete) :
     QDialog(parent),
     ui(new Ui::SettingDialog)
 {
@@ -27,6 +30,28 @@ SettingDialog::SettingDialog(QWidget *parent, bool random) :
         this->on_boardSizeM_valueChanged(8);
         this->on_boardSizeN_valueChanged(8);
         this->on_blackFirst_clicked();
+    }
+
+    ui->grpSpeed->setVisible(false);
+    ui->speed->setRange(0, 5);
+    ui->speed->setValue(1);
+    this->on_speed_valueChanged(1);
+
+    if (compete) {
+        QFile file("setting.txt");
+        if (!file.open(QIODevice::ReadOnly)) {
+            // ignore this setting
+        } else {
+            QTextStream fin(&file);
+            QString path;
+            fin >> path;
+            ui->blackIsComputer->setChecked(true);
+            ui->blackStrategy->setText(QFileInfo(path).fileName());
+            this->on_blackIsComputer_clicked();
+            _params.blackPlayer = Controller::COMPUTER;
+            _params.blackStrategy = path.toStdString();
+        }
+        file.close();
     }
 }
 
@@ -78,24 +103,34 @@ void SettingDialog::on_blackIsHuman_clicked()
 {
     ui->blackStrategy->setEnabled(false);
     _params.blackPlayer = Controller::HUMAN;
+    ui->grpSpeed->setVisible(false);
 }
 
 void SettingDialog::on_whiteIsHuman_clicked()
 {
     ui->whiteStrategy->setEnabled(false);
     _params.whitePlayer = Controller::HUMAN;
+    ui->grpSpeed->setVisible(false);
 }
 
 void SettingDialog::on_blackIsComputer_clicked()
 {
     ui->blackStrategy->setEnabled(true);
     _params.blackPlayer = Controller::COMPUTER;
+
+    if (_params.whitePlayer == Controller::COMPUTER) {
+        ui->grpSpeed->setVisible(true);
+    }
 }
 
 void SettingDialog::on_whiteIsComputer_clicked()
 {
     ui->whiteStrategy->setEnabled(true);
     _params.whitePlayer = Controller::COMPUTER;
+
+    if (_params.blackPlayer == Controller::COMPUTER) {
+        ui->grpSpeed->setVisible(true);
+    }
 }
 
 void SettingDialog::on_blackStrategy_released()
@@ -154,4 +189,9 @@ void SettingDialog::on_boardSizeM_valueChanged(int arg1)
 void SettingDialog::on_boardSizeN_valueChanged(int arg1)
 {
     _params.boardN = arg1;
+}
+
+void SettingDialog::on_speed_valueChanged(int arg1)
+{
+    _params.interval = arg1;
 }

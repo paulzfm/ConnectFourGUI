@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>584</width>
-    <height>396</height>
+    <height>674</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,6 +21,10 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionDefaultSetting"/>
+   <addaction name="actionRandomSetting"/>
+   <addaction name="actionSpecifiedSetting"/>
+   <addaction name="actionReplay"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -43,6 +47,7 @@
      <addaction name="actionDefaultSetting"/>
      <addaction name="actionRandomSetting"/>
      <addaction name="actionSpecifiedSetting"/>
+     <addaction name="actionCompete_Setting"/>
     </widget>
     <addaction name="menuNew_Game"/>
     <addaction name="actionReplay"/>
@@ -53,11 +58,9 @@
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Control</string>
+     <string>Settings</string>
     </property>
-    <addaction name="actionIntervalPlus"/>
-    <addaction name="actionIntervalMinus"/>
-    <addaction name="actionIntervalReset"/>
+    <addaction name="actionStrategyFile"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -103,9 +106,9 @@
     <string>Quit</string>
    </property>
   </action>
-  <action name="actionIntervalPlus">
+  <action name="actionStrategyFile">
    <property name="text">
-    <string>Speed +1s</string>
+    <string>My Strategy File</string>
    </property>
   </action>
   <action name="actionIntervalMinus">
@@ -121,6 +124,11 @@
   <action name="actionIntervalSet">
    <property name="text">
     <string>Change Speed</string>
+   </property>
+  </action>
+  <action name="actionCompete_Setting">
+   <property name="text">
+    <string>Compete Setting</string>
    </property>
   </action>
  </widget>

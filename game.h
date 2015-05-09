@@ -23,9 +23,6 @@ public:
     const static int WHITE_WIN = 3;
     const static int IS_TIE = 4;
 
-    // update "not" position
-    void updateNotPos();
-
     // tell whether it is a legal move
     bool isLegalMove(const Point& pos);
 

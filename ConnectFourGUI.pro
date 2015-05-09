@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     board.cpp \
     controller.cpp \
     point.cpp \
-    setting_dialog.cpp
+    setting_dialog.cpp \
+    my_strategy_dialog.cpp
 
 HEADERS  += mainwindow.h \
     strategy.h \
@@ -29,8 +30,10 @@ HEADERS  += mainwindow.h \
     game.h \
     board.h \
     controller.h \
-    setting_dialog.h
+    setting_dialog.h \
+    my_strategy_dialog.h
 
 FORMS    += mainwindow.ui \
     board.ui \
-    setting_dialog.ui
+    setting_dialog.ui \
+    my_strategy_dialog.ui

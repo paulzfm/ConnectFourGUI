@@ -25,7 +25,8 @@ public:
     // must first call this when create a new game
     void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
                       std::string dylibBlack, std::string dylibWhite,
-                      int firstPlayer, Board* board, bool random = false);
+                      int firstPlayer, Board* board, int speed = 1,
+                      bool random = false);
 
     // restart a new game with current setting
     void restartGame();
@@ -35,7 +36,6 @@ public:
 
     // game speed: only available in compete mode (two computer players)
     int getSpeed();
-    void setSpeed(int speed);
 
     // access game object
     Game* getGame();
@@ -43,6 +43,9 @@ public:
 public slots:
     // either call manually for callback with signal emiting
     void applyMove(const Point& pos);
+
+    // set speed
+    void setSpeed(int speed);
 
 private:
     int roleBlack;

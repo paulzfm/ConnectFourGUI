@@ -4,7 +4,6 @@
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
-    speed = 1;
     isCompete = false;
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(callStrategy()));
@@ -12,14 +11,17 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 Controller::~Controller()
 {
-    delete game;
-    delete strategyBlack;
-    delete strategyWhite;
+    if (game)
+        delete game;
+    if (strategyBlack)
+        delete strategyBlack;
+    if (strategyWhite)
+        delete strategyWhite;
 }
 
 void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
                               std::string dylibBlack, std::string dylibWhite, int firstPlayer,
-                              Board* board, bool random)
+                              Board* board, int speed, bool random)
 {
     status->setText("Loading...");
 
@@ -27,11 +29,21 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
     this->roleBlack = roleBlack;
     this->roleWhite = roleWhite;
     this->board = board;
+    this->dylibBlack = dylibBlack;
+    this->dylibWhite = dylibWhite;
+    Strategy* old1 = this->strategyBlack;
+    Strategy* old2 = this->strategyWhite;
     if (roleBlack == COMPUTER) {
         this->strategyBlack = new Strategy(dylibBlack);
     }
     if (roleWhite == COMPUTER) {
         this->strategyWhite = new Strategy(dylibWhite);
+    }
+    if (old1) {
+        delete old1;
+    }
+    if (old2) {
+        delete old2;
     }
 
     // compete mode
@@ -53,9 +65,16 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
     }
 
     // associate with game and board
+    Game* old = game;
     game = new Game(boardM, boardN, firstPlayer);
     board->setGame(game);
     connect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
+    if (old) {
+        delete old;
+    }
+
+    // speed
+    this->speed = speed;
 
     // TODO: resize window
 
@@ -71,15 +90,11 @@ void Controller::setStatus(QLabel *status)
 void Controller::restartGame()
 {
     // clear trash
-    connect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
-    Game* tmp = game;
-    delete game;
-    delete strategyBlack;
-    delete strategyWhite;
+    disconnect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
 
     // start game with current settings
-    loadSettings(tmp->boardM(), tmp->boardN(), this->roleBlack, this->roleWhite,
-                 this->dylibBlack, this->dylibWhite, tmp->firstPlayer(),
+    loadSettings(game->boardM(), game->boardN(), this->roleBlack, this->roleWhite,
+                 this->dylibBlack, this->dylibWhite, game->firstPlayer(),
                  this->board, this->isRandom);
 }
 
