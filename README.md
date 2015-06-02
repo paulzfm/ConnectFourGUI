@@ -50,7 +50,7 @@ Now, everything is done.
 
 `-all` means play with all 50 opponents in `Testcases/`.
 
-`-ten` means play with all 10 opponents, i.e., 10, 20, 30, ..., 100.
+`-ten` means play with 10 opponents, i.e., 10, 20, 30, ..., 100.
 
 Or you can just specify a number as your opponent, say, 2 or 52.
 
