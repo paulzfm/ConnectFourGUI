@@ -1,32 +1,21 @@
 #ifndef SETTING_DIALOG_H
 #define SETTING_DIALOG_H
 
+#include "controller.h"
+
 #include <QDialog>
 
 namespace Ui {
 class SettingDialog;
 }
 
-struct Params
-{
-    int boardM;
-    int boardN;
-    int firstPlayer;
-    bool isRandom;
-    int blackPlayer;
-    int whitePlayer;
-    std::string blackStrategy;
-    std::string whiteStrategy;
-    int interval;
-};
 
 class SettingDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SettingDialog(QWidget *parent = 0,
-                           bool random = false, bool compete = false);
+    explicit SettingDialog(QWidget *parent, Params& old, bool compete = false);
     ~SettingDialog();
 
     void getParams(Params& params);
@@ -44,7 +33,6 @@ private slots:
     void on_whiteFirst_clicked();
     void on_boardSizeM_valueChanged(int arg1);
     void on_boardSizeN_valueChanged(int arg1);
-
     void on_speed_valueChanged(int arg1);
 
 private:

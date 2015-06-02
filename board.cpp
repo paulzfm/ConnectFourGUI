@@ -84,8 +84,6 @@ void Board::paintEvent(QPaintEvent *)
         return;
     }
 
-//    std::cout << game->player() << std::endl;
-//    int color = game->player() == Game::BLACK_PLAYER ? Qt::black : Qt::white;
     painter.setPen(QPen());
     if (game->player() == Game::BLACK_PLAYER) {
         painter.setBrush(QBrush(Qt::black));

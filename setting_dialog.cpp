@@ -1,5 +1,6 @@
 #include "setting_dialog.h"
 #include "ui_setting_dialog.h"
+
 #include "controller.h"
 
 #include <QFileDialog>
@@ -9,38 +10,61 @@
 #include <QIODevice>
 #include <QTextStream>
 
-SettingDialog::SettingDialog(QWidget *parent, bool random, bool compete) :
+SettingDialog::SettingDialog(QWidget *parent, Params& old, bool compete) :
     QDialog(parent),
     ui(new Ui::SettingDialog)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Game Settings");
 
-    this->on_blackIsHuman_clicked();
-    this->on_whiteIsHuman_clicked();
-    ui->blackIsHuman->setChecked(true);
-    ui->whiteIsHuman->setChecked(true);
-    ui->boardSizeM->setValue(8);
-    ui->boardSizeN->setValue(8);
-    ui->blackFirst->setChecked(true);
-
-    if (random) {
+    if (old.isRandom) {
         ui->isRandom->setChecked(true);
         this->on_isRandom_clicked(true);
     } else {
-        this->on_boardSizeM_valueChanged(8);
-        this->on_boardSizeN_valueChanged(8);
-        this->on_blackFirst_clicked();
+        ui->boardSizeM->setValue(old.boardM);
+        ui->boardSizeN->setValue(old.boardN);
+        this->on_boardSizeM_valueChanged(old.boardM);
+        this->on_boardSizeN_valueChanged(old.boardN);
+        if (old.firstPlayer == Game::BLACK_PLAYER) {
+            this->on_blackFirst_clicked();
+            ui->blackFirst->setChecked(true);
+        } else {
+            this->on_whiteFirst_clicked();
+            ui->whiteFirst->setChecked(true);
+        }
     }
 
-    ui->grpSpeed->setVisible(false);
-    ui->speed->setRange(0, 5);
-    ui->speed->setValue(1);
-    this->on_speed_valueChanged(1);
+    if (old.blackPlayer == Controller::HUMAN) {
+        this->on_blackIsHuman_clicked();
+        ui->blackIsHuman->setChecked(true);
+    } else {
+        this->on_blackIsComputer_clicked();
+        ui->blackIsComputer->setChecked(true);
+        if (old.blackStrategy != "") {
+            _params.blackStrategy = old.blackStrategy;
+            ui->blackStrategy->setText(QFileInfo(QString::fromStdString(old.blackStrategy)).fileName());
+        }
+    }
+
+    if (old.whitePlayer == Controller::HUMAN) {
+        this->on_whiteIsHuman_clicked();
+        ui->whiteIsHuman->setChecked(true);
+    } else {
+        this->on_whiteIsComputer_clicked();
+        ui->whiteIsComputer->setChecked(true);
+        if (old.whiteStrategy != "") {
+            _params.whiteStrategy = old.whiteStrategy;
+            ui->whiteStrategy->setText(QFileInfo(QString::fromStdString(old.whiteStrategy)).fileName());
+        }
+    }
 
     if (compete) {
+        ui->isRandom->setChecked(true);
+        this->on_isRandom_clicked(true);
         QFile file("setting.txt");
         if (!file.open(QIODevice::ReadOnly)) {
             // ignore this setting
+            QMessageBox::critical(NULL, "Error", "Strategy file not found!", QMessageBox::Ok);
         } else {
             QTextStream fin(&file);
             QString path;
@@ -53,6 +77,9 @@ SettingDialog::SettingDialog(QWidget *parent, bool random, bool compete) :
         }
         file.close();
     }
+
+    this->on_speed_valueChanged(old.interval);
+    ui->speed->setValue(old.interval);
 }
 
 SettingDialog::~SettingDialog()
@@ -69,12 +96,12 @@ void SettingDialog::accept()
 {
     // check
     if (_params.blackPlayer == Controller::COMPUTER && _params.blackStrategy == "") {
-        QMessageBox::warning(this, "Error", "Please select a dynamic library file for black",
+        QMessageBox::warning(this, "Error", "Please select a dynamic library file for black!",
                              QMessageBox::Ok);
         return;
     }
     if (_params.whitePlayer == Controller::COMPUTER && _params.whiteStrategy == "") {
-        QMessageBox::warning(this, "Error", "Please select a dynamic library file for white",
+        QMessageBox::warning(this, "Error", "Please select a dynamic library file for white!",
                              QMessageBox::Ok);
         return;
     }

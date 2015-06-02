@@ -4,7 +4,7 @@
 
 Strategy::Strategy(std::string dylib)
 {
-    void* hDylib = dlopen(dylib.c_str(), RTLD_LOCAL | RTLD_NOW);
+    hDylib = dlopen(dylib.c_str(), RTLD_LOCAL | RTLD_NOW);
 
     if (!hDylib) {
         fprintf(stderr, "***Error: cannot find library \"%s\".\n", dylib.c_str());
@@ -19,11 +19,20 @@ Strategy::Strategy(std::string dylib)
     }
 }
 
+Strategy::~Strategy()
+{
+    if (hDylib) {
+        dlclose(hDylib);
+    }
+}
+
 Point Strategy::getDecision(const int M, const int N, const int *_top, const int *_board,
                             const int lastX, const int lastY, const int notX, const int notY)
 {
     Point *p = getPoint(M, N, _top, _board, lastX, lastY, notX, notY);
     Point decision(p->x, p->y);
-    clearPoint(p);
+    if (p) {
+        clearPoint(p);
+    }
     return decision;
 }

@@ -11,6 +11,7 @@ MyStrategyDialog::MyStrategyDialog(QWidget *parent) :
     ui(new Ui::MyStrategyDialog)
 {
     ui->setupUi(this);
+    this->setWindowTitle("My Strategy File");
 
     QFile file("setting.txt");
     if (!file.open(QIODevice::ReadOnly)) {

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>584</width>
-    <height>674</height>
+    <width>424</width>
+    <height>315</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,10 +21,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionDefaultSetting"/>
-   <addaction name="actionRandomSetting"/>
-   <addaction name="actionSpecifiedSetting"/>
-   <addaction name="actionReplay"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -32,7 +28,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>584</width>
+     <width>424</width>
      <height>22</height>
     </rect>
    </property>
@@ -44,10 +40,8 @@
      <property name="title">
       <string>New Game</string>
      </property>
-     <addaction name="actionDefaultSetting"/>
-     <addaction name="actionRandomSetting"/>
-     <addaction name="actionSpecifiedSetting"/>
-     <addaction name="actionCompete_Setting"/>
+     <addaction name="actionCompete"/>
+     <addaction name="actionOthers"/>
     </widget>
     <addaction name="menuNew_Game"/>
     <addaction name="actionReplay"/>
@@ -66,6 +60,8 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionHelp"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuGame"/>
    <addaction name="menuSettings"/>
@@ -90,10 +86,16 @@
    <property name="text">
     <string>Replay</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="actionCompeteTool">
    <property name="text">
     <string>Compete Tool</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionSave_As">
@@ -109,6 +111,9 @@
   <action name="actionStrategyFile">
    <property name="text">
     <string>My Strategy File</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionIntervalMinus">
@@ -129,6 +134,38 @@
   <action name="actionCompete_Setting">
    <property name="text">
     <string>Compete Setting</string>
+   </property>
+  </action>
+  <action name="actionCompete">
+   <property name="text">
+    <string>Compete</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionOthers">
+   <property name="text">
+    <string>Others</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

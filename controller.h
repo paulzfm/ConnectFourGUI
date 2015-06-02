@@ -4,12 +4,29 @@
 #include <QObject>
 #include <QLabel>
 #include <QTimer>
+#include <QMainWindow>
 
 #include <string>
 
 #include "strategy.h"
 #include "game.h"
 #include "board.h"
+
+struct Params
+{
+    int boardM;
+    int boardN;
+    int firstPlayer;
+    bool isRandom;
+    int blackPlayer;
+    int whitePlayer;
+    std::string blackStrategy;
+    std::string whiteStrategy;
+    int interval;
+
+    Params();
+};
+
 
 class Controller : public QObject
 {
@@ -23,10 +40,7 @@ public:
     const static int COMPUTER = 2;
 
     // must first call this when create a new game
-    void loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                      std::string dylibBlack, std::string dylibWhite,
-                      int firstPlayer, Board* board, int speed = 1,
-                      bool random = false);
+    void loadSettings(Params& param, Board* board);
 
     // restart a new game with current setting
     void restartGame();
@@ -34,11 +48,20 @@ public:
     // set status bar
     void setStatus(QLabel *status);
 
+    // set info bar
+    void setInfo(QLabel *info);
+
+    // set main window and desktop
+    void setWindow(QMainWindow *window);
+
     // game speed: only available in compete mode (two computer players)
     int getSpeed();
 
     // access game object
     Game* getGame();
+
+    // save current params
+    Params paramsBak;
 
 public slots:
     // either call manually for callback with signal emiting
@@ -63,6 +86,8 @@ private:
     QTimer *timer;
 
     QLabel *status;
+    QLabel *info;
+    QMainWindow *window;
 
     // first call this then applyMove
     void makeDecision();

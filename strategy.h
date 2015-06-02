@@ -14,11 +14,14 @@ class Strategy
 {
 public:
     Strategy(std::string dylib);
+    ~Strategy();
 
     Point getDecision(const int M, const int N, const int* _top, const int* _board,
                       const int lastX, const int lastY, const int notX, const int notY);
 
 private:
+    void* hDylib;
+
     GETPOINT getPoint;
     CLEARPOINT clearPoint;
 };

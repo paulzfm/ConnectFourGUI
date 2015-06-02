@@ -26,7 +26,8 @@ Game::Game(const int M, const int N, int firstPlayer)
 
     _lastPos = Point(-2, -2);
 
-    updateNotPos();
+    // randomize not position
+    _notPos = Point(rand() % M, rand() % N);
 }
 
 Game::~Game()
@@ -59,7 +60,6 @@ int Game::applyMove(const Point& pos)
         return IS_TIE;
     }
 
-//    updateNotPos();
     _player = _player == BLACK_PLAYER ? WHITE_PLAYER : BLACK_PLAYER;
     return GAME_CONTINUE;
 }
@@ -121,13 +121,13 @@ const int* Game::top() const
 const int* Game::board() const
 {
     int* tmp = new int[_boardM * _boardN];
-    if (_player == BLACK_PLAYER) {
+    if (_player == WHITE_PLAYER) {
         for (int i = 0; i < _boardM; i++) {
             for (int j = 0; j < _boardN; j++) {
                 tmp[i * _boardM + j] = _board[i][j];
             }
         }
-    } else { // _player == WHITE_PLAYER
+    } else { // _player == BLACK_PLAYER
         for (int i = 0; i < _boardM; i++) {
             for (int j = 0; j < _boardN; j++) {
                 if (_board[i][j] == 0) {

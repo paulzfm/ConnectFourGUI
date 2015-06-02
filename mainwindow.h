@@ -20,21 +20,24 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionDefaultSetting_triggered();
-    void on_actionRandomSetting_triggered();
-    void on_actionSpecifiedSetting_triggered();
     void on_actionReplay_triggered();
     void on_actionQuit_triggered();
-
-    void on_actionCompete_Setting_triggered();
-
     void on_actionStrategyFile_triggered();
+    void on_actionCompete_triggered();
+    void on_actionOthers_triggered();
+
+    void on_actionHelp_triggered();
+
+    void on_actionAbout_triggered();
+
+    void on_actionCompeteTool_triggered();
 
 private:
     Ui::MainWindow *ui;
     Controller *controller;
     Board *board;
     QLabel *status;
+    QLabel *info;
 };
 
 #endif // MAINWINDOW_H

@@ -1,12 +1,34 @@
 #include "controller.h"
 
+#include <QApplication>
 #include <QMessageBox>
+#include <QFileInfo>
+#include <QSize>
+
+#include <string>
+
+Params::Params()
+{
+    boardM = boardN = 10;
+    firstPlayer = Game::BLACK_PLAYER;
+    isRandom = false;
+    blackPlayer = Controller::HUMAN;
+    whitePlayer = Controller::HUMAN;
+    blackStrategy = "";
+    whiteStrategy = "";
+    interval = 0;
+}
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
     isCompete = false;
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(callStrategy()));
+
+    strategyBlack = NULL;
+    strategyWhite = NULL;
+    game = NULL;
+    board = NULL;
 }
 
 Controller::~Controller()
@@ -19,18 +41,16 @@ Controller::~Controller()
         delete strategyWhite;
 }
 
-void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhite,
-                              std::string dylibBlack, std::string dylibWhite, int firstPlayer,
-                              Board* board, int speed, bool random)
+void Controller::loadSettings(Params& param, Board* board)
 {
     status->setText("Loading...");
 
     // allocate players
-    this->roleBlack = roleBlack;
-    this->roleWhite = roleWhite;
+    this->roleBlack = param.blackPlayer;
+    this->roleWhite = param.whitePlayer;
     this->board = board;
-    this->dylibBlack = dylibBlack;
-    this->dylibWhite = dylibWhite;
+    this->dylibBlack = param.blackStrategy;
+    this->dylibWhite = param.whiteStrategy;
     Strategy* old1 = this->strategyBlack;
     Strategy* old2 = this->strategyWhite;
     if (roleBlack == COMPUTER) {
@@ -54,7 +74,10 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
     }
 
     // random mode
-    if (random) {
+    int boardM = param.boardM;
+    int boardN = param.boardN;
+    int firstPlayer = param.firstPlayer;
+    if (param.isRandom) {
         isRandom = true;
         boardM = 7 + rand() % 6;
         boardN = 7 + rand() % 6;
@@ -66,7 +89,7 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
 
     // associate with game and board
     Game* old = game;
-    game = new Game(boardM, boardN, firstPlayer);
+    game = new Game(boardM, boardN, param.firstPlayer);
     board->setGame(game);
     connect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
     if (old) {
@@ -74,9 +97,29 @@ void Controller::loadSettings(int boardM, int boardN, int roleBlack, int roleWhi
     }
 
     // speed
-    this->speed = speed;
+    this->speed = param.interval;
 
-    // TODO: resize window
+    // save current params
+    this->paramsBak = param;
+
+    // resize window
+    QSize size(board->SPAN * (boardN + 1), board->SPAN * (boardM + 1));
+    board->setFixedSize(size);
+    window->resize(size.width(), size.height() + board->SPAN + 20);
+
+    // update info
+    QString txt;
+    std::string black = "HUMAN";
+    std::string white = "HUMAN";
+    if (roleBlack == COMPUTER) {
+        black = QFileInfo(QString::fromStdString(dylibBlack)).fileName().toStdString();
+    }
+    if (roleWhite == COMPUTER) {
+        white = QFileInfo(QString::fromStdString(dylibWhite)).fileName().toStdString();
+    }
+    txt.sprintf("[%i×%i] (Black) %s VS %s (White)",
+                boardM, boardN, black.c_str(), white.c_str());
+    info->setText(txt);
 
     // start first round
     makeDecision();
@@ -87,15 +130,23 @@ void Controller::setStatus(QLabel *status)
     this->status = status;
 }
 
+void Controller::setInfo(QLabel *info)
+{
+    this->info = info;
+}
+
+void Controller::setWindow(QMainWindow *window)
+{
+    this->window = window;
+}
+
 void Controller::restartGame()
 {
     // clear trash
     disconnect(board, SIGNAL(moveMade(Point)), this, SLOT(applyMove(Point)));
 
     // start game with current settings
-    loadSettings(game->boardM(), game->boardN(), this->roleBlack, this->roleWhite,
-                 this->dylibBlack, this->dylibWhite, game->firstPlayer(),
-                 this->board, this->isRandom);
+    loadSettings(this->paramsBak, this->board);
 }
 
 void Controller::makeDecision()
@@ -178,7 +229,7 @@ void Controller::applyMove(const Point &pos)
 
 void Controller::gameOver()
 {
-    status->setText("");
+    status->setText("Game over.");
     QMessageBox::StandardButton ret = QMessageBox::question(NULL,
         "Game Over", "Do you want to play again?",
         QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
